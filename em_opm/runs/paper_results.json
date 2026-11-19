@@ -1,0 +1,570 @@
+{
+  "open_loop_il": {
+    "test_sequence": "M0S7",
+    "samples": 304,
+    "learned": {
+      "ADE_m": 0.9443454742431641,
+      "FDE_m": 1.1951067447662354,
+      "per_horizon_m": {
+        "1": 0.4375270903110504,
+        "2": 0.7968459129333496,
+        "3": 1.0763206481933594,
+        "4": 1.2159271240234375,
+        "5": 1.1951067447662354
+      },
+      "p95_FDE_m": 3.19150270223617
+    },
+    "constant_velocity": {
+      "ADE_m": 1.4301078645585739,
+      "FDE_m": 3.146143273163809,
+      "p95_FDE_m": 8.840796916252582
+    },
+    "linear_to_8s_goal": {
+      "ADE_m": 1.537376803867357,
+      "FDE_m": 1.7869725325192987,
+      "p95_FDE_m": 5.142423081462197
+    },
+    "scope": "open-loop imitation baseline; not closed-loop navigation"
+  },
+  "boundary_prediction": {
+    "test_sequence": "M0S7",
+    "pairs": 9000,
+    "positive_rate": 0.4322222173213959,
+    "AUROC": 0.9432887779896266,
+    "AUPRC": 0.9365011856267818,
+    "Brier": 0.10202822834253311,
+    "ECE_10": 0.06950833740747638
+  },
+  "collision_prediction": {
+    "runs": [
+      {
+        "pairs": 28800,
+        "positive_rate": 0.2082291692495346,
+        "AUROC": 0.997967840253174,
+        "AUPRC": 0.9927473431082647,
+        "Brier": 0.019322631880640984,
+        "ECE_10": 0.02160456407090856,
+        "device": "cuda",
+        "seed": 23,
+        "best_val_bce": 0.0779370641171494,
+        "scope": "controlled collision replay using measured target speeds, longitudinal actions, and augmented placements"
+      },
+      {
+        "pairs": 28800,
+        "positive_rate": 0.2082291692495346,
+        "AUROC": 0.9978718765243191,
+        "AUPRC": 0.9924037253960997,
+        "Brier": 0.021100923418998718,
+        "ECE_10": 0.02526303291716936,
+        "device": "cuda",
+        "seed": 11,
+        "best_val_bce": 0.07909128330100108,
+        "scope": "controlled collision replay using measured target speeds, longitudinal actions, and augmented placements"
+      },
+      {
+        "pairs": 28800,
+        "positive_rate": 0.2082291692495346,
+        "AUROC": 0.9980200890410021,
+        "AUPRC": 0.992942045433652,
+        "Brier": 0.01987789012491703,
+        "ECE_10": 0.02318881209687485,
+        "device": "cuda",
+        "seed": 31,
+        "best_val_bce": 0.07705447302364252,
+        "scope": "controlled collision replay using measured target speeds, longitudinal actions, and augmented placements"
+      }
+    ],
+    "mean_std": {
+      "AUROC": {
+        "mean": 0.9979532686061651,
+        "std": 7.517304834710535e-05
+      },
+      "AUPRC": {
+        "mean": 0.9926977046460056,
+        "std": 0.00027257127216417714
+      },
+      "Brier": {
+        "mean": 0.020100481808185577,
+        "std": 0.0009098024466574728
+      },
+      "ECE_10": {
+        "mean": 0.023352136361650927,
+        "std": 0.0018346947120335003
+      }
+    }
+  },
+  "closed_loop_il": {
+    "setting": "kinematic closed loop on reconstructed M0S7 map",
+    "device": "cuda",
+    "parameters": {
+      "map": "carla_mine/outputs/scene_7_closed_loop",
+      "checkpoint": "em_opm/runs/il_v1/best.pt",
+      "output": "em_opm/runs/closed_loop_il",
+      "starts": 10,
+      "segment_length": 120,
+      "time_limit": 45,
+      "dt": 0.1,
+      "policy_dt": 0.5,
+      "wheelbase": 4.5,
+      "vehicle_width": 3.5,
+      "road_width": 12,
+      "initial_speed": 5,
+      "speed_control": "fixed",
+      "max_speed": 12,
+      "max_steer": 0.5235987755982988,
+      "max_accel": 1.5,
+      "max_brake": 3
+    },
+    "overall": {
+      "episodes": 130,
+      "success_rate": 0.015384615384615385,
+      "boundary_rate": 0.9846153846153847,
+      "recovery_rate_perturbed": 0.0
+    },
+    "conditions": {
+      "Nominal": {
+        "episodes": 10,
+        "success_rate": 0.0,
+        "boundary_rate": 1.0,
+        "recovery_rate": null,
+        "mean_lateral_m": 2.257370208521928,
+        "mean_progress_m": 63.6
+      },
+      "Lat +1m": {
+        "episodes": 10,
+        "success_rate": 0.0,
+        "boundary_rate": 1.0,
+        "recovery_rate": 0.0,
+        "mean_lateral_m": 2.1325994338241028,
+        "mean_progress_m": 66.8
+      },
+      "Lat -1m": {
+        "episodes": 10,
+        "success_rate": 0.0,
+        "boundary_rate": 1.0,
+        "recovery_rate": 0.0,
+        "mean_lateral_m": 2.566976941365433,
+        "mean_progress_m": 55.8
+      },
+      "Lat +2m": {
+        "episodes": 10,
+        "success_rate": 0.0,
+        "boundary_rate": 1.0,
+        "recovery_rate": 0.0,
+        "mean_lateral_m": 2.1932209000902003,
+        "mean_progress_m": 69.4
+      },
+      "Lat -2m": {
+        "episodes": 10,
+        "success_rate": 0.0,
+        "boundary_rate": 1.0,
+        "recovery_rate": 0.0,
+        "mean_lateral_m": 3.0330475978432703,
+        "mean_progress_m": 49.8
+      },
+      "Lat +3m": {
+        "episodes": 10,
+        "success_rate": 0.0,
+        "boundary_rate": 1.0,
+        "recovery_rate": 0.0,
+        "mean_lateral_m": 2.3510300278482497,
+        "mean_progress_m": 72.0
+      },
+      "Lat -3m": {
+        "episodes": 10,
+        "success_rate": 0.0,
+        "boundary_rate": 1.0,
+        "recovery_rate": 0.0,
+        "mean_lateral_m": 3.4990547984116724,
+        "mean_progress_m": 39.6
+      },
+      "Yaw +5deg": {
+        "episodes": 10,
+        "success_rate": 0.0,
+        "boundary_rate": 1.0,
+        "recovery_rate": 0.0,
+        "mean_lateral_m": 2.0192439090660286,
+        "mean_progress_m": 70.6
+      },
+      "Yaw -5deg": {
+        "episodes": 10,
+        "success_rate": 0.0,
+        "boundary_rate": 1.0,
+        "recovery_rate": 0.0,
+        "mean_lateral_m": 2.4436911301731223,
+        "mean_progress_m": 50.4
+      },
+      "Yaw +10deg": {
+        "episodes": 10,
+        "success_rate": 0.1,
+        "boundary_rate": 0.9,
+        "recovery_rate": 0.0,
+        "mean_lateral_m": 2.0592315570071653,
+        "mean_progress_m": 84.0
+      },
+      "Yaw -10deg": {
+        "episodes": 10,
+        "success_rate": 0.0,
+        "boundary_rate": 1.0,
+        "recovery_rate": 0.0,
+        "mean_lateral_m": 2.567453323067452,
+        "mean_progress_m": 38.2
+      },
+      "Yaw +15deg": {
+        "episodes": 10,
+        "success_rate": 0.1,
+        "boundary_rate": 0.9,
+        "recovery_rate": 0.0,
+        "mean_lateral_m": 2.080261775812845,
+        "mean_progress_m": 87.6
+      },
+      "Yaw -15deg": {
+        "episodes": 10,
+        "success_rate": 0.0,
+        "boundary_rate": 1.0,
+        "recovery_rate": 0.0,
+        "mean_lateral_m": 2.564450845924056,
+        "mean_progress_m": 26.0
+      }
+    },
+    "limitations": [
+      "BEV is cropped from an accumulated point map rather than ray-cast LiDAR",
+      "12 m road width and vehicle parameters are approximations",
+      "no dynamic obstacles in v1"
+    ]
+  },
+  "closed_loop_risk": {
+    "setting": "kinematic closed loop on reconstructed M0S7 map",
+    "device": "cuda",
+    "parameters": {
+      "map": "carla_mine/outputs/scene_7_closed_loop",
+      "checkpoint": "em_opm/runs/il_v1/best.pt",
+      "risk_checkpoint": "em_opm/runs/risk_v1/best.pt",
+      "risk_lambda": 0.02,
+      "output": "em_opm/runs/closed_loop_risk",
+      "controller": "il",
+      "starts": 10,
+      "segment_length": 120,
+      "time_limit": 45,
+      "dt": 0.1,
+      "policy_dt": 0.5,
+      "wheelbase": 4.5,
+      "vehicle_width": 3.5,
+      "road_width": 12,
+      "initial_speed": 5,
+      "speed_control": "fixed",
+      "max_speed": 12,
+      "max_steer": 0.5235987755982988,
+      "max_accel": 1.5,
+      "max_brake": 3
+    },
+    "overall": {
+      "episodes": 130,
+      "success_rate": 0.8923076923076924,
+      "boundary_rate": 0.1076923076923077,
+      "recovery_rate_perturbed": 0.43333333333333335
+    },
+    "conditions": {
+      "Nominal": {
+        "episodes": 10,
+        "success_rate": 0.9,
+        "boundary_rate": 0.1,
+        "recovery_rate": null,
+        "mean_lateral_m": 1.058260957631495,
+        "mean_progress_m": 115.6
+      },
+      "Lat +1m": {
+        "episodes": 10,
+        "success_rate": 0.9,
+        "boundary_rate": 0.1,
+        "recovery_rate": 0.5,
+        "mean_lateral_m": 1.1929091041448687,
+        "mean_progress_m": 115.4
+      },
+      "Lat -1m": {
+        "episodes": 10,
+        "success_rate": 0.9,
+        "boundary_rate": 0.1,
+        "recovery_rate": 0.2,
+        "mean_lateral_m": 1.3150553785491323,
+        "mean_progress_m": 115.4
+      },
+      "Lat +2m": {
+        "episodes": 10,
+        "success_rate": 0.9,
+        "boundary_rate": 0.1,
+        "recovery_rate": 0.6,
+        "mean_lateral_m": 1.3246806601117607,
+        "mean_progress_m": 115.6
+      },
+      "Lat -2m": {
+        "episodes": 10,
+        "success_rate": 0.9,
+        "boundary_rate": 0.1,
+        "recovery_rate": 0.2,
+        "mean_lateral_m": 1.5646687591305848,
+        "mean_progress_m": 115.2
+      },
+      "Lat +3m": {
+        "episodes": 10,
+        "success_rate": 0.8,
+        "boundary_rate": 0.2,
+        "recovery_rate": 0.6,
+        "mean_lateral_m": 1.6221769852086112,
+        "mean_progress_m": 104.8
+      },
+      "Lat -3m": {
+        "episodes": 10,
+        "success_rate": 0.9,
+        "boundary_rate": 0.1,
+        "recovery_rate": 0.4,
+        "mean_lateral_m": 1.6971854629694938,
+        "mean_progress_m": 112.8
+      },
+      "Yaw +5deg": {
+        "episodes": 10,
+        "success_rate": 0.9,
+        "boundary_rate": 0.1,
+        "recovery_rate": 0.5,
+        "mean_lateral_m": 1.1428429914643023,
+        "mean_progress_m": 115.4
+      },
+      "Yaw -5deg": {
+        "episodes": 10,
+        "success_rate": 0.9,
+        "boundary_rate": 0.1,
+        "recovery_rate": 0.3,
+        "mean_lateral_m": 1.3528694096506908,
+        "mean_progress_m": 115.4
+      },
+      "Yaw +10deg": {
+        "episodes": 10,
+        "success_rate": 0.9,
+        "boundary_rate": 0.1,
+        "recovery_rate": 0.6,
+        "mean_lateral_m": 1.1398593726085584,
+        "mean_progress_m": 115.4
+      },
+      "Yaw -10deg": {
+        "episodes": 10,
+        "success_rate": 0.9,
+        "boundary_rate": 0.1,
+        "recovery_rate": 0.3,
+        "mean_lateral_m": 1.4266431749158315,
+        "mean_progress_m": 115.2
+      },
+      "Yaw +15deg": {
+        "episodes": 10,
+        "success_rate": 0.9,
+        "boundary_rate": 0.1,
+        "recovery_rate": 0.7,
+        "mean_lateral_m": 1.2053469493884956,
+        "mean_progress_m": 115.6
+      },
+      "Yaw -15deg": {
+        "episodes": 10,
+        "success_rate": 0.9,
+        "boundary_rate": 0.1,
+        "recovery_rate": 0.3,
+        "mean_lateral_m": 1.4434554246050213,
+        "mean_progress_m": 113.2
+      }
+    },
+    "limitations": [
+      "BEV is cropped from an accumulated point map rather than ray-cast LiDAR",
+      "12 m road width and vehicle parameters are approximations",
+      "no dynamic obstacles in v1"
+    ]
+  },
+  "closed_loop_route_upper": {
+    "setting": "kinematic closed loop on reconstructed M0S7 map",
+    "device": "cuda",
+    "parameters": {
+      "map": "carla_mine/outputs/scene_7_closed_loop",
+      "checkpoint": "em_opm/runs/il_v1/best.pt",
+      "output": "em_opm/runs/closed_loop_route_upper",
+      "controller": "route",
+      "starts": 10,
+      "segment_length": 120,
+      "time_limit": 45,
+      "dt": 0.1,
+      "policy_dt": 0.5,
+      "wheelbase": 4.5,
+      "vehicle_width": 3.5,
+      "road_width": 12,
+      "initial_speed": 5,
+      "speed_control": "fixed",
+      "max_speed": 12,
+      "max_steer": 0.5235987755982988,
+      "max_accel": 1.5,
+      "max_brake": 3
+    },
+    "overall": {
+      "episodes": 130,
+      "success_rate": 1.0,
+      "boundary_rate": 0.0,
+      "recovery_rate_perturbed": 1.0
+    },
+    "conditions": {
+      "Nominal": {
+        "episodes": 10,
+        "success_rate": 1.0,
+        "boundary_rate": 0.0,
+        "recovery_rate": null,
+        "mean_lateral_m": 0.5086991134859582,
+        "mean_progress_m": 120.0
+      },
+      "Lat +1m": {
+        "episodes": 10,
+        "success_rate": 1.0,
+        "boundary_rate": 0.0,
+        "recovery_rate": 1.0,
+        "mean_lateral_m": 0.5495668526751178,
+        "mean_progress_m": 120.0
+      },
+      "Lat -1m": {
+        "episodes": 10,
+        "success_rate": 1.0,
+        "boundary_rate": 0.0,
+        "recovery_rate": 1.0,
+        "mean_lateral_m": 0.5466661730868614,
+        "mean_progress_m": 120.0
+      },
+      "Lat +2m": {
+        "episodes": 10,
+        "success_rate": 1.0,
+        "boundary_rate": 0.0,
+        "recovery_rate": 1.0,
+        "mean_lateral_m": 0.6115271225811385,
+        "mean_progress_m": 120.0
+      },
+      "Lat -2m": {
+        "episodes": 10,
+        "success_rate": 1.0,
+        "boundary_rate": 0.0,
+        "recovery_rate": 1.0,
+        "mean_lateral_m": 0.6060882854725542,
+        "mean_progress_m": 120.0
+      },
+      "Lat +3m": {
+        "episodes": 10,
+        "success_rate": 1.0,
+        "boundary_rate": 0.0,
+        "recovery_rate": 1.0,
+        "mean_lateral_m": 0.6822098043291985,
+        "mean_progress_m": 120.0
+      },
+      "Lat -3m": {
+        "episodes": 10,
+        "success_rate": 1.0,
+        "boundary_rate": 0.0,
+        "recovery_rate": 1.0,
+        "mean_lateral_m": 0.677941824919874,
+        "mean_progress_m": 120.0
+      },
+      "Yaw +5deg": {
+        "episodes": 10,
+        "success_rate": 1.0,
+        "boundary_rate": 0.0,
+        "recovery_rate": 1.0,
+        "mean_lateral_m": 0.5165616028312605,
+        "mean_progress_m": 120.0
+      },
+      "Yaw -5deg": {
+        "episodes": 10,
+        "success_rate": 1.0,
+        "boundary_rate": 0.0,
+        "recovery_rate": 1.0,
+        "mean_lateral_m": 0.515484040252864,
+        "mean_progress_m": 120.0
+      },
+      "Yaw +10deg": {
+        "episodes": 10,
+        "success_rate": 1.0,
+        "boundary_rate": 0.0,
+        "recovery_rate": 1.0,
+        "mean_lateral_m": 0.529281152234525,
+        "mean_progress_m": 120.0
+      },
+      "Yaw -10deg": {
+        "episodes": 10,
+        "success_rate": 1.0,
+        "boundary_rate": 0.0,
+        "recovery_rate": 1.0,
+        "mean_lateral_m": 0.5271022011432598,
+        "mean_progress_m": 120.0
+      },
+      "Yaw +15deg": {
+        "episodes": 10,
+        "success_rate": 1.0,
+        "boundary_rate": 0.0,
+        "recovery_rate": 1.0,
+        "mean_lateral_m": 0.5446844071499749,
+        "mean_progress_m": 120.0
+      },
+      "Yaw -15deg": {
+        "episodes": 10,
+        "success_rate": 1.0,
+        "boundary_rate": 0.0,
+        "recovery_rate": 1.0,
+        "mean_lateral_m": 0.5416012439487857,
+        "mean_progress_m": 120.0
+      }
+    },
+    "limitations": [
+      "BEV is cropped from an accumulated point map rather than ray-cast LiDAR",
+      "12 m road width and vehicle parameters are approximations",
+      "no dynamic obstacles in v1"
+    ]
+  },
+  "dynamic_none": {
+    "mode": "none",
+    "collision_weight": 3.0,
+    "episodes": 150,
+    "success_rate": 0.0,
+    "collision_rate": 0.9933333333333333,
+    "boundary_rate": 0.006666666666666667,
+    "mean_progress_m": 32.57333333333333,
+    "mean_min_clearance_m": -0.15144741040643073,
+    "source_tracks": 5,
+    "scope": "controlled dynamic replay"
+  },
+  "dynamic_brake": {
+    "mode": "brake",
+    "collision_weight": 3.0,
+    "episodes": 150,
+    "success_rate": 0.12,
+    "collision_rate": 0.3333333333333333,
+    "boundary_rate": 0.02,
+    "mean_progress_m": 32.666666666666664,
+    "mean_min_clearance_m": 9.718597691669862,
+    "source_tracks": 5,
+    "scope": "controlled dynamic replay"
+  },
+  "dynamic_geometric": {
+    "mode": "geometric",
+    "collision_weight": 3.0,
+    "episodes": 150,
+    "success_rate": 0.49333333333333335,
+    "collision_rate": 0.2733333333333333,
+    "boundary_rate": 0.04666666666666667,
+    "mean_progress_m": 77.33333333333333,
+    "mean_min_clearance_m": 1.7176059657130451,
+    "source_tracks": 5,
+    "scope": "controlled dynamic replay"
+  },
+  "dynamic_learned": {
+    "mode": "learned",
+    "collision_weight": 3.0,
+    "collision_threshold": 0.7,
+    "episodes": 150,
+    "success_rate": 0.49333333333333335,
+    "collision_rate": 0.16666666666666666,
+    "boundary_rate": 0.15333333333333332,
+    "timeout_rate": 0.18666666666666668,
+    "mean_progress_m": 80.37333333333333,
+    "mean_min_clearance_m": 1.7018363364974023,
+    "source_tracks": 5,
+    "scope": "controlled dynamic replay"
+  }
+}

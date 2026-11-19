@@ -1,0 +1,14 @@
+{
+  "source_hotspot_frames": 351,
+  "core_radius_m": 4.0,
+  "feather_m": 3.0,
+  "support_cells": 5984,
+  "changed_cells": 5834,
+  "correction_abs_p50_p95_max_m": [
+    0.012858072916666666,
+    0.08549194335937493,
+    0.5
+  ],
+  "outside_support_unchanged": true,
+  "policy": "Only severe wheel contact hotspots; full terrain, texture, ROI and routes retained."
+}

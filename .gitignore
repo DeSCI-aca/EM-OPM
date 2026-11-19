@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Logs and runtime state
+*.log
+*.pid
+Saved/
+Intermediate/
+DerivedDataCache/
+Binaries/
+
+# Training products and raw datasets
+data/
+datasets/
+checkpoints/
+wandb/
+*.bag
+*.db3
+*.pcd
+*.las
+*.laz
+
+# Editor and OS files
+.idea/
+.vscode/
+.DS_Store
+*~
+

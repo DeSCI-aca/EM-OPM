@@ -1,0 +1,8 @@
+{
+  "start_points": "rl_start_points.csv",
+  "terminal_points": "rl_terminal_points.csv",
+  "goal_radius_m": 5.0,
+  "terminate_outside_drivable": true,
+  "terminate_outside_roi": true,
+  "max_route_length_m": 1349.9019335374192
+}

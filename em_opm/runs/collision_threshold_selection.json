@@ -1,0 +1,81 @@
+{
+  "criterion": "success-collision-boundary-0.25*timeout",
+  "selected_threshold": 0.7,
+  "runs": [
+    {
+      "mode": "learned",
+      "collision_weight": 3.0,
+      "collision_threshold": 0.1,
+      "episodes": 150,
+      "success_rate": 0.20666666666666667,
+      "collision_rate": 0.05333333333333334,
+      "boundary_rate": 0.54,
+      "timeout_rate": 0.2,
+      "mean_progress_m": 49.346666666666664,
+      "mean_min_clearance_m": 3.265076846775035,
+      "source_tracks": 5,
+      "scope": "controlled dynamic replay",
+      "selection_score": -0.4366666666666667
+    },
+    {
+      "mode": "learned",
+      "collision_weight": 3.0,
+      "collision_threshold": 0.2,
+      "episodes": 150,
+      "success_rate": 0.18,
+      "collision_rate": 0.05333333333333334,
+      "boundary_rate": 0.5666666666666667,
+      "timeout_rate": 0.2,
+      "mean_progress_m": 49.82666666666667,
+      "mean_min_clearance_m": 2.975471198794221,
+      "source_tracks": 5,
+      "scope": "controlled dynamic replay",
+      "selection_score": -0.49
+    },
+    {
+      "mode": "learned",
+      "collision_weight": 3.0,
+      "collision_threshold": 0.3,
+      "episodes": 150,
+      "success_rate": 0.20666666666666667,
+      "collision_rate": 0.06,
+      "boundary_rate": 0.5466666666666666,
+      "timeout_rate": 0.18666666666666668,
+      "mean_progress_m": 55.21333333333333,
+      "mean_min_clearance_m": 2.641459606085641,
+      "source_tracks": 5,
+      "scope": "controlled dynamic replay",
+      "selection_score": -0.44666666666666666
+    },
+    {
+      "mode": "learned",
+      "collision_weight": 3.0,
+      "collision_threshold": 0.5,
+      "episodes": 150,
+      "success_rate": 0.3333333333333333,
+      "collision_rate": 0.04666666666666667,
+      "boundary_rate": 0.4533333333333333,
+      "timeout_rate": 0.16666666666666666,
+      "mean_progress_m": 65.70666666666666,
+      "mean_min_clearance_m": 2.222581558395858,
+      "source_tracks": 5,
+      "scope": "controlled dynamic replay",
+      "selection_score": -0.20833333333333334
+    },
+    {
+      "mode": "learned",
+      "collision_weight": 3.0,
+      "collision_threshold": 0.7,
+      "episodes": 150,
+      "success_rate": 0.43333333333333335,
+      "collision_rate": 0.14,
+      "boundary_rate": 0.2866666666666667,
+      "timeout_rate": 0.14,
+      "mean_progress_m": 75.06666666666666,
+      "mean_min_clearance_m": 1.7859065414265707,
+      "source_tracks": 5,
+      "scope": "controlled dynamic replay",
+      "selection_score": -0.02833333333333335
+    }
+  ]
+}

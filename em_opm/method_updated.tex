@@ -1,0 +1,142 @@
+\section{Method}
+\label{sec:method}
+
+\subsection{Overview and Problem Formulation}
+
+We formulate mine navigation as trajectory prediction followed by action-conditioned risk screening. Repeated human-driven traversals provide LiDAR maps, vehicle poses, and expert motion without requiring recorded steering or pedal commands. At time $t$, the observation is
+\begin{equation}
+o_t=\{B_t,s_t,g_t\},
+\end{equation}
+where $B_t$ is a LiDAR bird's-eye-view (BEV) representation, $s_t=[v_x,v_y,\dot{\psi}]$ is the vehicle state, and $g_t$ is an ego-frame local goal. An imitation policy predicts a five-second waypoint trajectory. A finite candidate set is then evaluated for transportation-corridor violation and, when traffic is present, collision with tracked vehicles. The selected trajectory is executed by a low-level controller and replanned from the resulting state.
+
+The implemented system therefore contains four components: LiDAR map and BEV construction, trajectory-level imitation learning, boundary-risk screening, and camera--LiDAR-based dynamic-vehicle collision screening. Reinforcement learning is not used in the present framework.
+
+\subsection{LiDAR Map and BEV Construction}
+
+For each traversal, timestamped LiDAR scans are transformed from the vehicle base frame into a common map frame using the corresponding odometry poses. The accumulated point cloud provides the geometric map used to render observations in the data-driven simulator. At a queried vehicle pose, points within an $80\times80\,\mathrm{m}$ local region are transformed back to the current ego frame and rasterized at $0.5\,\mathrm{m}$ resolution, producing a $160\times160$ BEV.
+
+Each cell contains five channels: mean height, height variance, logarithmic point density, vertical span, and an observation mask. The vertical span provides simple obstacle evidence, while the mask distinguishes unobserved space from observed cells with few returns. Channel statistics are normalized using the training traversals only. The same rasterization procedure is used for imitation learning, risk prediction, and closed-loop evaluation.
+
+\subsection{Trajectory-Level Imitation Learning}
+
+At each sampled expert pose, the pose eight seconds ahead defines the local goal $g_t$. Future odometry poses at one-second intervals are transformed into the current vehicle frame to form the expert trajectory
+\begin{equation}
+\tau_t^*=\{w_{t,k}^*=(x_{t,k}^*,y_{t,k}^*)\}_{k=1}^{5}.
+\label{eq:expert_target}
+\end{equation}
+The policy encodes $B_t$ with a convolutional backbone, concatenates the resulting feature with $s_t$ and $g_t$, and predicts a diagonal Gaussian distribution over the five waypoints,
+\begin{equation}
+\pi_\theta(\tau_t\mid o_t)=
+\mathcal{N}\!\left(\mu_\theta(o_t),
+\operatorname{diag}(\sigma_\theta^2(o_t))\right).
+\label{eq:policy}
+\end{equation}
+The network outputs the waypoint mean and a bounded log standard deviation. It is optimized with Gaussian negative log-likelihood,
+\begin{equation}
+\mathcal{L}_{\mathrm{IL}}=
+\frac{1}{5}\sum_{k=1}^{5}
+\left[
+\frac{\|w_{t,k}^*-\mu_{t,k}\|_2^2}{2\sigma_{t,k}^2}
++\log \sigma_{t,k}
+\right].
+\label{eq:il}
+\end{equation}
+At inference time, the predicted mean trajectory is used as the imitation reference $\hat{\tau}^{\mathrm{IL}}_t$.
+
+\subsection{Closed-Loop Vehicle Model}
+
+We use a kinematic bicycle model to evaluate recursive execution. For wheelbase $L$, speed $v$, steering angle $\delta$, and integration interval $\Delta t$, the state evolves as
+\begin{align}
+x_{t+1} &= x_t+v_t\cos\psi_t\,\Delta t,\\
+y_{t+1} &= y_t+v_t\sin\psi_t\,\Delta t,\\
+\psi_{t+1} &= \psi_t+\frac{v_t}{L}\tan\delta_t\,\Delta t.
+\end{align}
+A Pure Pursuit controller follows the selected waypoints at $10\,\mathrm{Hz}$, and the policy replans at $2\,\mathrm{Hz}$. After every integration step, the next BEV is rendered at the simulated pose, so prediction errors affect subsequent observations rather than being reset to the recorded expert route.
+
+\subsection{Candidate Trajectory Generation}
+\label{sec:candidate_generation}
+
+For boundary recovery at a fixed speed, we generate 25 candidates by combining heading perturbations
+$\alpha\in\{-15^\circ,-7.5^\circ,0^\circ,7.5^\circ,15^\circ\}$ with terminal lateral offsets
+$d\in\{-3,-1.5,0,1.5,3\}\,\mathrm{m}$. Each candidate is a smooth five-waypoint curve initialized at the current pose and parameterized by $(\alpha,d)$.
+
+Dynamic-traffic evaluation additionally requires longitudinal choices. Its candidate set combines three heading perturbations $\{-7.5^\circ,0^\circ,7.5^\circ\}$, the same five lateral offsets, and target speeds $v_f\in\{0,1,2.5,5\}\,\mathrm{m\,s^{-1}}$, yielding 60 candidates. The speed changes linearly from the current task speed $v_0$ to $v_f$ over $t_r=3\,\mathrm{s}$ and then remains constant. Thus, with $u=\min(t,t_r)$, longitudinal progress is
+\begin{equation}
+x(t)=v_0u+\frac{v_f-v_0}{2t_r}u^2+v_f\max(0,t-t_r),
+\end{equation}
+while lateral displacement follows a smooth endpoint-constrained interpolation. This construction includes continuing, slowing, stopping, and lateral avoidance actions in one common representation.
+
+\subsection{Action-Conditioned Boundary Risk}
+
+For a candidate trajectory $\tau$, we approximate the vehicle by an oriented rectangular footprint and sweep it along all waypoints. Given the estimated transportation corridor $\mathcal{C}$, the boundary target is
+\begin{equation}
+y_{\mathrm{bd}}(\tau)=
+\mathbb{I}\!\left[\bigcup_k \mathcal{F}_{\mathrm{ego}}(w_k)
+\not\subseteq \mathcal{C}\right].
+\label{eq:boundary_target}
+\end{equation}
+The boundary-risk network receives the BEV, vehicle state, local goal, and candidate waypoints, and predicts
+\begin{equation}
+q_{\mathrm{bd}}=R_{\phi}^{\mathrm{bd}}(B_t,s_t,g_t,\tau).
+\label{eq:risk}
+\end{equation}
+It is trained with binary cross-entropy,
+\begin{equation}
+\mathcal{L}_{\mathrm{bd}}=
+-y_{\mathrm{bd}}\log q_{\mathrm{bd}}
+-(1-y_{\mathrm{bd}})\log(1-q_{\mathrm{bd}}).
+\label{eq:risk_loss}
+\end{equation}
+Conditioning on the proposed action allows the same observation to assign different risks to trajectories that remain inside or cross the corridor.
+
+\subsection{Dynamic-Actor Extraction}
+\label{sec:dynamic_actor_method}
+
+Vehicles are detected independently in all six synchronized camera streams. Using the calibrated camera--LiDAR transformations, synchronized LiDAR returns are projected into each detected image region. Robust depth statistics from the associated returns provide a three-dimensional vehicle position in the base frame, which is then transformed into the map frame using odometry. Multi-view detections that refer to the same object are fused before temporal association.
+
+Detections are linked over time using spatial proximity and motion consistency. Short tracks, physically implausible speeds, and stationary objects are removed. The retained track supplies an actor state and a five-second future path
+\begin{equation}
+A_t=\{a_{t,k}=(x^a_{t,k},y^a_{t,k})\}_{k=1}^{5}.
+\end{equation}
+For controlled replay, the measured actor speed and motion direction are preserved, while its relative placement and arrival time are varied. Cameras are used only for dynamic-object extraction; the imitation and boundary-risk networks consume the LiDAR BEV rather than image features.
+
+\subsection{Action-Conditioned Collision Risk}
+
+The collision model jointly encodes a candidate ego trajectory and the actor path. A collision label is generated with a rectangular overlap approximation in the candidate vehicle's local heading frame,
+\begin{equation}
+y_{\mathrm{col}}(\tau,A_t)=
+\mathbb{I}\!\left[\exists k:\
+\mathcal{F}_{\mathrm{ego}}(w_k)\cap
+\mathcal{F}_{\mathrm{actor}}(a_{t,k})\neq\varnothing\right].
+\label{eq:collision_target}
+\end{equation}
+The collision network predicts
+\begin{equation}
+q_{\mathrm{col}}=R_{\omega}^{\mathrm{col}}(\tau,A_t)
+\end{equation}
+and is optimized using binary cross-entropy. The actor path is provided explicitly to this head. Consequently, the reported collision prediction evaluates action--actor interaction reasoning after tracking, rather than an end-to-end image-to-collision model.
+
+\subsection{Risk-Aware Candidate Selection}
+
+Without dynamic traffic, the selected trajectory minimizes predicted boundary risk and deviation from the imitation proposal,
+\begin{equation}
+\tau_t^*=\arg\min_{\tau\in\mathcal{T}_t}
+q_{\mathrm{bd}}(\tau)+\lambda_D
+D(\tau,\hat{\tau}^{\mathrm{IL}}_t),
+\qquad \lambda_D=0.02,
+\label{eq:screening_score}
+\end{equation}
+where $D$ is the mean waypoint distance. This preserves the demonstrated driving style when candidates have comparable boundary risk.
+
+With a tracked vehicle, candidates with $q_{\mathrm{col}}>\epsilon_{\mathrm{col}}$ are rejected. Among the remaining candidates, selection uses
+\begin{equation}
+\tau_t^*=\arg\min_{\tau\in\mathcal{T}^{\mathrm{safe}}_t}
+q_{\mathrm{bd}}(\tau)+\lambda_D D(\tau,\hat{\tau}^{\mathrm{IL}}_t)
++\lambda_v(v_{\max}-v_f),
+\label{eq:deployment}
+\end{equation}
+where $\epsilon_{\mathrm{col}}=0.7$ is selected on the validation traversal and $\lambda_v=0.03$ penalizes unnecessary delay. If no candidate passes the collision threshold, the system chooses the candidate with the lowest collision risk, using a small secondary penalty for boundary risk, imitation deviation, and delay. This decision rule combines imitation, corridor preservation, longitudinal response, and learned collision screening without policy optimization through reinforcement learning.
+
+\subsection{Training Protocol}
+
+All learned components are separated by complete traversal. The imitation policy and boundary-risk model use the designated training traversals, hyperparameters and checkpoints are selected using only the validation traversal, and the test traversal is held out until final evaluation. The collision model follows the same split before replay augmentation, ensuring that tracks from the test traversal never appear in training. The imitation policy is trained for 60 epochs with Gaussian trajectory likelihood. Both risk heads use positive-class-weighted binary cross-entropy to account for label imbalance. The modules are trained separately, and no test-time parameter update is performed.

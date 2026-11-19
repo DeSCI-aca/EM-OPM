@@ -1,0 +1,123 @@
+{
+  "method": "10 Hz OS1-64 scan replay; 16-bin odometry deskew; robust ground residual median; ROI-only update",
+  "lidar_mounting_height_observation_m": "approximately 2.0--2.4; preserved through measured point coordinates, not manually subtracted",
+  "full_terrain_and_texture_preserved": true,
+  "outside_roi_unchanged": true,
+  "scans_used": 19481,
+  "uniform_points_per_scan": 4096,
+  "associated_ground_returns": 76263668,
+  "updated_cells": 69645,
+  "minimum_returns_per_cell": 8,
+  "correction_abs_p50_p95_max_m": [
+    0.20000000298023224,
+    0.550000011920929,
+    1.2000000476837158
+  ],
+  "heightfield_consistency": {
+    "count": 76263668,
+    "mae_m": 0.24700040731775316,
+    "rmse_m": 0.3444609392855846,
+    "p50_m": 0.15000000000000002,
+    "p95_m": 0.75
+  },
+  "per_scene_input": {
+    "M0S0": {
+      "scans_10hz": 2802,
+      "associated_ground_returns": 11031080,
+      "utm_alignment": {
+        "rotation_deg": -0.7484394529701903,
+        "gps_fit_median_m": 1.2683165439410569,
+        "gps_fit_p95_m": 2.008733285664642,
+        "gps_fit_max_m": 2.154972918706073,
+        "utm_origin_east_north": [
+          419587.3499011486,
+          4868704.6002840325
+        ]
+      }
+    },
+    "M0S1": {
+      "scans_10hz": 2509,
+      "associated_ground_returns": 9710968,
+      "utm_alignment": {
+        "rotation_deg": -0.7551157663375355,
+        "gps_fit_median_m": 1.2048378365794545,
+        "gps_fit_p95_m": 1.9803254548533658,
+        "gps_fit_max_m": 2.0690142341041065,
+        "utm_origin_east_north": [
+          419575.0779542462,
+          4868754.4040033575
+        ]
+      }
+    },
+    "M0S2": {
+      "scans_10hz": 2807,
+      "associated_ground_returns": 11093823,
+      "utm_alignment": {
+        "rotation_deg": -0.754467665129424,
+        "gps_fit_median_m": 1.1825589555050007,
+        "gps_fit_p95_m": 1.964246564061766,
+        "gps_fit_max_m": 2.0501061553170783,
+        "utm_origin_east_north": [
+          419580.0936124091,
+          4868706.299153933
+        ]
+      }
+    },
+    "M0S3": {
+      "scans_10hz": 3693,
+      "associated_ground_returns": 14493601,
+      "utm_alignment": {
+        "rotation_deg": -0.7569390559099003,
+        "gps_fit_median_m": 1.3491132165894375,
+        "gps_fit_p95_m": 2.185483851878274,
+        "gps_fit_max_m": 2.2474514492428357,
+        "utm_origin_east_north": [
+          419560.03878821875,
+          4868775.85936415
+        ]
+      }
+    },
+    "M0S5": {
+      "scans_10hz": 2498,
+      "associated_ground_returns": 9699495,
+      "utm_alignment": {
+        "rotation_deg": -0.7524619271722532,
+        "gps_fit_median_m": 1.32592105191167,
+        "gps_fit_p95_m": 1.886294498721067,
+        "gps_fit_max_m": 1.9534726924646453,
+        "utm_origin_east_north": [
+          419559.29618334054,
+          4868739.177274491
+        ]
+      }
+    },
+    "M0S6": {
+      "scans_10hz": 2522,
+      "associated_ground_returns": 9913591,
+      "utm_alignment": {
+        "rotation_deg": -0.7440545527299158,
+        "gps_fit_median_m": 1.2791876921188075,
+        "gps_fit_p95_m": 2.166584233755948,
+        "gps_fit_max_m": 2.2645807579124764,
+        "utm_origin_east_north": [
+          419555.3657879854,
+          4868737.269954972
+        ]
+      }
+    },
+    "M0S7": {
+      "scans_10hz": 2650,
+      "associated_ground_returns": 10321110,
+      "utm_alignment": {
+        "rotation_deg": -0.7568612325428693,
+        "gps_fit_median_m": 1.2965752127923589,
+        "gps_fit_p95_m": 1.9705651613621256,
+        "gps_fit_max_m": 2.025169127222442,
+        "utm_origin_east_north": [
+          419549.595435663,
+          4868731.841412708
+        ]
+      }
+    }
+  }
+}

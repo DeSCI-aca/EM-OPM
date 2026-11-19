@@ -1,0 +1,18 @@
+{
+  "grid_resolution_m": 1.0,
+  "vertices": [
+    943,
+    593
+  ],
+  "vertex_count": 559199,
+  "triangle_count": 1115328,
+  "source_rows": [
+    965,
+    1558
+  ],
+  "source_cols": [
+    1806,
+    2749
+  ],
+  "purpose": "High-resolution collision and LiDAR ray surface inside first20 ROI; full satellite mesh remains visual context."
+}
